@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 1272654838058134573}
   - component: {fileID: 1272654838058134572}
   - component: {fileID: 5305280056378390894}
+  - component: {fileID: 847405122625067356}
+  - component: {fileID: -1366627054123853206}
   m_Layer: 7
   m_Name: SwordsmanUnit
   m_TagString: Untagged
@@ -61,6 +63,32 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.61019766, y: 1.8222065, z: 1}
   m_Center: {x: 0.03641337, y: 0.86384535, z: 0}
+--- !u!114 &847405122625067356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1272654838058134575}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bacc8869fb064541983776380c3ec4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitAnimator: {fileID: 1224245209867793251}
+  maxMoveDistance: 4
+--- !u!114 &-1366627054123853206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1272654838058134575}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8380d3ed153cb0e4fb2da7225b6b684d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7704033547421826207
 GameObject:
   m_ObjectHideFlags: 0

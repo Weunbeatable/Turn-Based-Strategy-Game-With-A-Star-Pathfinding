@@ -14,6 +14,7 @@ public class UnitActionSystem : MonoBehaviour
     [SerializeField] private LayerMask unitLayerMask;
     private int counter = 0;
 
+    private bool isBusy; //check if we're in a state
     private void Awake()
     {
         // error check for more than one instance, hence singleton, we'll delete the extra
@@ -27,7 +28,11 @@ public class UnitActionSystem : MonoBehaviour
     }
     private void Update()
     {
-        
+
+        if (isBusy)
+        {
+            return;
+        }
 
         if (Input.GetMouseButtonDown(0)) // call our unit moving function
         {
@@ -43,11 +48,36 @@ public class UnitActionSystem : MonoBehaviour
             }
 
             counter = 0;
-            selectedUnit.Move(MouseWorld.GetPosition());
+
+            GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(MouseWorld.GetPosition());
+
+            // verify that you can actually move here using the grid position checks in level grid and grid system
+            // If valid then call move action to move
+
+            if (selectedUnit.GetMoveAction().IsValidActionGridPosition(mouseGridPosition))
+            {
+                SetBusy();
+                selectedUnit.GetMoveAction().Move(mouseGridPosition, ClearBusy);
+            }
             
+            
+        }
+        if (Input.GetMouseButtonDown(1))
+        {
+            SetBusy();
+            selectedUnit.GetSpinAction().Spin(ClearBusy);
         }
     }
 
+    private void SetBusy()
+    {
+        isBusy = true;
+    }
+
+    private void ClearBusy()
+    {
+        isBusy = false;
+    }
     //Summary handles selecting indivudal units, fires raycast and checks for unit under mouse
     private bool TryHandleUnitSelection()
     {

@@ -5,43 +5,45 @@ using UnityEngine;
 public class Unit : MonoBehaviour
 {
     [SerializeField] private Animator unitAnimator;
+    private MoveAction moveAction;
+
     private Vector3 targetPosition;
+    private GridPosition gridPosition;
+    private SpinAction spinAction;
 
     private void Awake()
     {
-        targetPosition = transform.position;
+        moveAction = GetComponent<MoveAction>();
+        spinAction = GetComponent<SpinAction>();
+    }
+
+    private void Start()
+    {
+        // When unit starts it finds its own pos then calls setunit on level grid,
+        // setunitatGridPos func from level grid gets grid object on underlying grid system and calls a function to set unit
+        // Grid object stores unit and displays it on tostring
+        gridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
+        LevelGrid.Instance.AddUnitAtGridPosition(gridPosition, this);
     }
     private void Update()
     {
         
-        float stoppingDistance = .1f;
-        if(Vector3.Distance(transform.position, targetPosition) > stoppingDistance)
-        {
-            Vector3 moveDirection = (targetPosition - transform.position).normalized; // only care about direction so we normalize
-            float moveSpeed = 4;
-            transform.position += moveDirection * moveSpeed * Time.deltaTime; // framerate independent movement
-                                                                              // using transform. forward/up/right * a vector allows for easy rotation
-            float rotateSpeed = 10f;
-            transform.forward = Vector3.Lerp(transform.forward,moveDirection, rotateSpeed * Time.deltaTime); // we'll lerp rotation to make it smoother
-            unitAnimator.SetBool("isWalking", true);
-        }
-        else
-        {
-            unitAnimator.SetBool("isWalking", false);
-        }
+      
 
-       
+        GridPosition newGridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
+        if(newGridPosition != gridPosition) // if a unit has moved update the grid to show that
+        {
+            // Unit changed Grid position
+            LevelGrid.Instance.UnitMovedGridPosition(this, gridPosition, newGridPosition);
+            gridPosition = newGridPosition;
+        }
     }
 
     public void ReadyAnim()
     {
         unitAnimator.Play("Intro");
     }
-    public void Move(Vector3 targetPosition)
-    {
-       
-        this.targetPosition = targetPosition;
-    }
+   
     public float GetNormalizedTime(Animator animator, string tag) // purpose here is to check how far through the animation and if we pass a threshold so if they player is still attacking or holding attack , go to the next animation.
     {
         // want to know the data for current and next state to figure out which one we are in whenever blending
@@ -64,4 +66,10 @@ public class Unit : MonoBehaviour
     }
 
     public Animator GetAnimator() => unitAnimator;
+
+    public MoveAction GetMoveAction() => moveAction;
+
+    public SpinAction GetSpinAction() => spinAction;
+
+    public GridPosition GetGridPosition() => gridPosition;
 }

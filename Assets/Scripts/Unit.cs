@@ -10,11 +10,13 @@ public class Unit : MonoBehaviour
     private Vector3 targetPosition;
     private GridPosition gridPosition;
     private SpinAction spinAction;
+    private BaseAction[] baseActionArray;
 
     private void Awake()
     {
         moveAction = GetComponent<MoveAction>();
         spinAction = GetComponent<SpinAction>();
+        baseActionArray = GetComponents<BaseAction>(); //store components attached to this unit that extends base action
     }
 
     private void Start()
@@ -72,4 +74,6 @@ public class Unit : MonoBehaviour
     public SpinAction GetSpinAction() => spinAction;
 
     public GridPosition GetGridPosition() => gridPosition;
+
+    public BaseAction[] GetBaseActionArray() => baseActionArray; 
 }

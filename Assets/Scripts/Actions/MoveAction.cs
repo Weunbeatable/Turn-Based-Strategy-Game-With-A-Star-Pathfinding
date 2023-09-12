@@ -43,21 +43,15 @@ public class MoveAction : BaseAction
         float rotateSpeed = 10f;
         transform.forward = Vector3.Lerp(transform.forward, moveDirection, rotateSpeed * Time.deltaTime); // we'll lerp rotation to make it smoother
     }
-    public void Move(GridPosition gridPosition, Action onActionComplete)
+    public override void TakeAction(GridPosition gridPosition, Action onActionComplete)
     {
         this.onActionComplete = onActionComplete;
         this.targetPosition = LevelGrid.Instance.GetWorldPosition(gridPosition);
         isActive = true;
     }
 
-    // using our list of grid positions, check to see if its valid to move here
-    //SideNote this kind of idea can be modified for AI combat in PFF
-    public bool IsValidActionGridPosition(GridPosition gridPosition)
-    {
-        List<GridPosition> validGridPositionList = GetValidActionGridPositionList();
-        return validGridPositionList.Contains(gridPosition);
-    }
-    public List<GridPosition> GetValidActionGridPositionList()
+
+    public override List<GridPosition> GetValidActionGridPositionList()
     {
         List<GridPosition> validGridPositionList = new List<GridPosition>();
 
@@ -91,5 +85,10 @@ public class MoveAction : BaseAction
         }
 
         return validGridPositionList;
+    }
+
+    public override string GetActionName()
+    {
+        return "Move";
     }
 }

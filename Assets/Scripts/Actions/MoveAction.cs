@@ -6,7 +6,8 @@ using System;
 public class MoveAction : BaseAction
 {
     //Since actions belong to the unit design wise the action should ask the Unit for a grid position
-    [SerializeField] private Animator unitAnimator;
+    public event EventHandler OnStartMoving;
+    public event EventHandler OnStopMoving;
     [SerializeField] private int maxMoveDistance = 4; // for ease of testing this field will be serialized
     
     private Vector3 targetPosition;
@@ -30,14 +31,12 @@ public class MoveAction : BaseAction
             
             float moveSpeed = 4;
             transform.position += moveDirection * moveSpeed * Time.deltaTime; // framerate independent movement
-                                                                              // using transform. forward/up/right * a vector allows for easy rotation
-            unitAnimator.SetBool("isWalking", true);
+                                                                             // using transform. forward/up/right * a vector allows for easy rotation
         }
         else
         {
-            unitAnimator.SetBool("isWalking", false);
-            isActive = false;
-            onActionComplete();
+            OnStopMoving?.Invoke(this, EventArgs.Empty);
+            ActionComplete();
         }
 
         float rotateSpeed = 10f;
@@ -45,9 +44,9 @@ public class MoveAction : BaseAction
     }
     public override void TakeAction(GridPosition gridPosition, Action onActionComplete)
     {
-        this.onActionComplete = onActionComplete;
         this.targetPosition = LevelGrid.Instance.GetWorldPosition(gridPosition);
-        isActive = true;
+        OnStartMoving?.Invoke(this, EventArgs.Empty);
+        ActionStart(onActionComplete);
     }
 
 
@@ -90,5 +89,9 @@ public class MoveAction : BaseAction
     public override string GetActionName()
     {
         return "Move";
+    }
+    public override int GetActionPointsCost()
+    {
+        return 1;
     }
 }

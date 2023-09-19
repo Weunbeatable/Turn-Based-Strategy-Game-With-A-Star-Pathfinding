@@ -5,6 +5,10 @@ using System;
 
 public abstract class BaseAction : MonoBehaviour
 {
+
+    public static event EventHandler OnAnyActionStarted;
+    public static event EventHandler OnAnyActionCompleted;
+
     protected Unit unit;
     protected bool isActive; //verifying if an action is active
     protected Action onActionComplete; 
@@ -27,4 +31,23 @@ public abstract class BaseAction : MonoBehaviour
 
     public abstract List<GridPosition> GetValidActionGridPositionList();
 
+    public virtual int GetActionPointsCost() => 1;
+
+    protected void ActionStart(Action onActionComplete) // global way of taking actions and checkign to see if an action has started or completed
+    {
+        isActive = true;
+        this.onActionComplete = onActionComplete;
+
+        OnAnyActionStarted?.Invoke(this, EventArgs.Empty);
+    }
+
+    protected void ActionComplete()
+    {
+        isActive = false;
+        onActionComplete();
+
+        OnAnyActionCompleted?.Invoke(this, EventArgs.Empty);
+    }
+
+    public Unit GetUnit() => unit;
 }

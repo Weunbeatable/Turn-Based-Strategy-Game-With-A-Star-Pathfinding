@@ -12,6 +12,7 @@ public class UnitActionSystem : MonoBehaviour
     public event EventHandler OnSelectedUnitChange;
     public event EventHandler OnSelectedActionChange;
     public event EventHandler<bool> OnBusyChanged;
+    public event EventHandler OnActionStarted;
 
     [SerializeField] private Unit selectedUnit;
     [SerializeField] private LayerMask unitLayerMask;
@@ -43,6 +44,11 @@ public class UnitActionSystem : MonoBehaviour
             return;
         }
 
+        if (!TurnSystem.Instance.IsPlayerTurn())
+        {
+            return; // If enemy's turn don't do anything
+        }
+
         if (EventSystem.current.IsPointerOverGameObject())
         {
             return;
@@ -65,11 +71,18 @@ public class UnitActionSystem : MonoBehaviour
             // If valid then call move action to move
             GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(MouseWorld.GetPosition());
 
-            if (selectedAction.IsValidActionGridPosition(mouseGridPosition))
+            if (!selectedAction.IsValidActionGridPosition(mouseGridPosition))
             {
-                SetBusy();
-                selectedAction.TakeAction(mouseGridPosition, ClearBusy);
+                return;
             }
+            if (!selectedUnit.TrySpendActionPointsToTakeACertainAction(selectedAction))
+            {
+                return;
+            }
+              SetBusy();
+              selectedAction.TakeAction(mouseGridPosition, ClearBusy);
+
+            OnActionStarted?.Invoke(this, EventArgs.Empty); // event triggers when an action starts
         }
     }
     private void SetBusy()
@@ -100,6 +113,13 @@ public class UnitActionSystem : MonoBehaviour
                         //unit is already selected
                         return false;
                     }
+
+                    if (unit.IsEnemy())
+                    {
+                        // Clicked on the enemy
+                        return false;
+                    }
+
                     SetSelectedUnit(unit);
                     return true;
                 }

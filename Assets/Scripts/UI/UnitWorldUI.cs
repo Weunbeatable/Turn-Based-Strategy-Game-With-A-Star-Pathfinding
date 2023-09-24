@@ -19,9 +19,9 @@ public class UnitWorldUI : MonoBehaviour
 
         UpdateACtionPointsText();
         UpdateHealthBar();
+
+       CameraManager.OnShowActionCamera  += CameraManager_OnShowActionCamera;
     }
-
-
 
     private void Unit_OnAnyActionPointsChanged(object sender, EventArgs e)
     {
@@ -40,5 +40,14 @@ public class UnitWorldUI : MonoBehaviour
     private void HealthSSystem_OnDamaged(object sender, EventArgs e)
     {
         UpdateHealthBar();
+    }
+
+    private void OnDestroy()
+    {
+        CameraManager.OnShowActionCamera -= CameraManager_OnShowActionCamera;
+    }
+    private void CameraManager_OnShowActionCamera(object sender, CameraManager.OnShowActionCameraEventArgs e)
+    {
+        unit.enabled = e.show;
     }
 }

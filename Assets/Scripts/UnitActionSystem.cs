@@ -35,6 +35,7 @@ public class UnitActionSystem : MonoBehaviour
     private void Start()
     {
         SetSelectedUnit(selectedUnit);
+        TurnSystem.Instance.OnTurnChanged += TurnSystem_OnTurnChanged;
     }
     private void Update()
     {
@@ -152,4 +153,24 @@ public class UnitActionSystem : MonoBehaviour
     }
 
     public BaseAction GetSelectedAction() => selectedAction;
+
+    private void TurnSystem_OnTurnChanged(object sender, EventArgs e) // in the event that player unit dies during enemy turn we dont want to select player unit that died
+        // when our turn starts again
+    {
+        if (TurnSystem.Instance.IsPlayerTurn())
+        {
+            if (selectedUnit == null) // our player has died or for some reason isn't selected
+            {
+                if (UnitManager.Instance.GetFriendlyUnitList().Count > 0)
+                {
+                    SetSelectedUnit(UnitManager.Instance.GetFriendlyUnitList()[0]); // assign a new friendly unit 
+                }
+                else
+                {
+                    SetSelectedUnit(null);
+                    //TurnSystem.Instance.NextTurn();
+                }
+            }
+        }
+    }
 }

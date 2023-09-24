@@ -674,8 +674,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxShootDistance: 7
   newShootingStateTime: 0.1
-  newCoolOffStateTime: 2.4
-  newAimingStateTime: 2
+  newCoolOffStateTime: 2.1
+  newAimingStateTime: 1.9
 --- !u!114 &-8036190933133933490
 MonoBehaviour:
   m_ObjectHideFlags: 0

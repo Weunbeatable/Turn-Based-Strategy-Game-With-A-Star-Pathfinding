@@ -11,6 +11,9 @@ public class Unit : MonoBehaviour
 
     public static event EventHandler OnAnyActionPointsChanged; // this will fire whenever action points change
     // this will be for a specific event that we are certain will change after changing action points. 
+    public static event EventHandler OnAnyUnitSpawned;
+
+    public static event EventHandler OnAnyUnitDead;
 
     [SerializeField] private bool isEnemy;
 
@@ -18,6 +21,7 @@ public class Unit : MonoBehaviour
     private HealthSystem healthSystem;
     private GridPosition gridPosition;
     private SpinAction spinAction;
+    private ShootAction shootAction;
     private BaseAction[] baseActionArray;
     private int actionPoints = ACTION_POINTS_MAX;
 
@@ -26,6 +30,7 @@ public class Unit : MonoBehaviour
         healthSystem = GetComponent<HealthSystem>();
         moveAction = GetComponent<MoveAction>();
         spinAction = GetComponent<SpinAction>();
+        shootAction = GetComponent<ShootAction>();
         baseActionArray = GetComponents<BaseAction>(); //store components attached to this unit that extends base action
     }
 
@@ -40,6 +45,8 @@ public class Unit : MonoBehaviour
         TurnSystem.Instance.OnTurnChanged += TurnSystem_OnTurnChanged;
 
         healthSystem.onDead += healthSystem_OnDead;
+
+        OnAnyUnitSpawned?.Invoke(this, EventArgs.Empty);
     }
 
     private void Update()
@@ -48,8 +55,9 @@ public class Unit : MonoBehaviour
         if(newGridPosition != gridPosition) // if a unit has moved update the grid to show that
         {
             // Unit changed Grid position
-            LevelGrid.Instance.UnitMovedGridPosition(this, gridPosition, newGridPosition);
+            GridPosition oldGridposition = gridPosition;
             gridPosition = newGridPosition;
+            LevelGrid.Instance.UnitMovedGridPosition(this, oldGridposition, newGridPosition);
         }
     }
 
@@ -85,6 +93,7 @@ public class Unit : MonoBehaviour
 
     public SpinAction GetSpinAction() => spinAction;
 
+    public ShootAction GetShootAction() => shootAction;
     public GridPosition GetGridPosition() => gridPosition;
 
     public Vector3 GetWorldPosition() => transform.position;
@@ -146,6 +155,9 @@ public class Unit : MonoBehaviour
     {
         LevelGrid.Instance.RemoveUnitAtGridPosition(gridPosition, this);
         Destroy(gameObject);
+
+        OnAnyUnitDead?.Invoke(this, EventArgs.Empty);
     }
 
+    public float GetHealthNormalized() => healthSystem.GetHealthNormalized();
 }

@@ -24,6 +24,7 @@ public class ShootAction : BaseAction
     [SerializeField] float newShootingStateTime = 0.1f;
     [SerializeField] float newCoolOffStateTime = 0.1f;
     [SerializeField] float newAimingStateTime = 1f;
+    [SerializeField] private int damageToDeal = 40; 
     private float stateTimer;
     private Unit targetUnit;
     private bool canShootBullet;
@@ -76,6 +77,7 @@ public class ShootAction : BaseAction
                     stateTimer = coolOffStateTime;
                 break;
             case State.CoolOff:
+                targetUnit.Damage(40);
                 ActionComplete();
                 break;
         }
@@ -89,14 +91,19 @@ public class ShootAction : BaseAction
             targetUnit = targetUnit,
             shootingUnit = unit
         });
-        targetUnit.Damage(40);
+        // Moved targetUnit.Damage(40); from here to cooloff period this was to avoid weird visual of damage being done before animation, will adjust cooloff and shooting timers so 
+        // each animation attack lines up better and feels nicer
     }
     public override string GetActionName()
     {
         return "Shoot";
     }
-
-    public override List<GridPosition> GetValidActionGridPositionList()
+    public override List<GridPosition> GetValidActionGridPositionList() 
+    {
+        GridPosition unitGridPosition = unit.GetGridPosition();
+        return GetValidActionGridPositionList(unitGridPosition);
+    }
+    public List<GridPosition> GetValidActionGridPositionList(GridPosition unitGridPosition) // this version will take any valid grid pos so we can see valid shootable targets
     {
         List<GridPosition> validGridPositionList = new List<GridPosition>();
 
@@ -157,4 +164,25 @@ public class ShootAction : BaseAction
     }
 
     public Unit GetTargetUnit() => targetUnit;
+
+    public int GetMaxShootDistance() => maxShootDistance;
+
+    public override EnemyAIAction GetEnemyAIAction(GridPosition gridPosition)
+    {
+        // make sure theAI shoots the weakest player unit first
+        Unit targetUnit = LevelGrid.Instance.GetUnitAtGridPosition(gridPosition);
+
+        return new EnemyAIAction
+        {
+            gridPosition = gridPosition,
+            // will do the action if it can't do anythingelse, very little value
+            actionValue = 100 + Mathf.RoundToInt((1 - targetUnit.GetHealthNormalized()) * 100f), // use 1- so that we look for enemy with lowest not highest health 
+            // value for enemy with full health is 100 (1 -1) * 100 at 50 (.5 -.5) .5 *100 =  50, and so on
+        };
+    }
+
+    public int GetTargetCountAtPosition(GridPosition gridPosition)
+    {
+       return GetValidActionGridPositionList(gridPosition).Count; // list of valid targets
+    }
 }

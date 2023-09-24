@@ -106,10 +106,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4a30bce93035a74d841e259782ffdba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxShootDistance: 7
+  maxShootDistance: 10
   newShootingStateTime: 0.1
-  newCoolOffStateTime: 2.2
-  newAimingStateTime: 2
+  newCoolOffStateTime: 1.9
+  newAimingStateTime: 1.65
+  damageToDeal: 20
 --- !u!114 &902918435792952211
 MonoBehaviour:
   m_ObjectHideFlags: 0

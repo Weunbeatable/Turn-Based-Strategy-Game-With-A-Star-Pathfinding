@@ -5,7 +5,14 @@ using UnityEngine;
 
 public class CameraManager : MonoBehaviour
 {
+    public static event EventHandler<OnShowActionCameraEventArgs> OnShowActionCamera; // an event for the unitWorldUI to listen to to enable/disable action camera
+
+    public class OnShowActionCameraEventArgs // custom class for triggering when to show action camera
+    {
+        public bool show;
+    }
     [SerializeField] private GameObject actionCameraGameObject;
+    [SerializeField] private GameObject Canvas; // access to canvas to turn it off during action moments. (also will use in phantom fighter)
 
     private void Start()
     {
@@ -18,11 +25,15 @@ public class CameraManager : MonoBehaviour
     private void ShowACtionCamera()
     {
         actionCameraGameObject.SetActive(true);
+        Canvas.SetActive(false);
+        OnShowActionCamera?.Invoke(this, new OnShowActionCameraEventArgs { show = true }); // invoke canvas hiding event
     }
 
     private void HideActionCamera()
     {
         actionCameraGameObject.SetActive(false);
+        Canvas.SetActive(true);
+        OnShowActionCamera?.Invoke(this, new OnShowActionCameraEventArgs { show = false });
     }
 
     private void BaseAction_OnAnyActionStarted(object sender, EventArgs e)

@@ -94,4 +94,16 @@ public class MoveAction : BaseAction
     {
         return 1;
     }
+
+    // works a little differently from other actions as it has to do with positioning and player proximity, 
+    // Enemy should move to player, find if ther are shootable targets fromc current positions and then depending on number of targets that will define the actual action value; 
+    public override EnemyAIAction GetEnemyAIAction(GridPosition gridPosition)
+    {
+     int targetCountAtGridPosition = unit.GetShootAction().GetTargetCountAtPosition(gridPosition); // grabbing target count at this current position
+        return new EnemyAIAction
+        {
+            gridPosition = gridPosition,
+            actionValue = targetCountAtGridPosition * 20, // Enemy will prioritize a place with lots of enemies
+        };
+    }
 }

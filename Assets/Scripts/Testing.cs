@@ -10,7 +10,7 @@ public class Testing : MonoBehaviour
        
     }
 
-    private void Update()
+  /*  private void Update()
     {
         if (Input.GetKeyDown(KeyCode.T))
         {
@@ -18,6 +18,6 @@ public class Testing : MonoBehaviour
             GridSystemVisual.Instance.ShowGridPositionList(
             unit.GetMoveAction().GetValidActionGridPositionList());
         }
-    }
+    }*/
 
 }

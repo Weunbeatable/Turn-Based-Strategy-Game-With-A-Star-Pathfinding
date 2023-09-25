@@ -17,20 +17,14 @@ public class Unit : MonoBehaviour
 
     [SerializeField] private bool isEnemy;
 
-    private MoveAction moveAction;
     private HealthSystem healthSystem;
     private GridPosition gridPosition;
-    private SpinAction spinAction;
-    private ShootAction shootAction;
     private BaseAction[] baseActionArray;
     private int actionPoints = ACTION_POINTS_MAX;
 
     private void Awake()
     {
         healthSystem = GetComponent<HealthSystem>();
-        moveAction = GetComponent<MoveAction>();
-        spinAction = GetComponent<SpinAction>();
-        shootAction = GetComponent<ShootAction>();
         baseActionArray = GetComponents<BaseAction>(); //store components attached to this unit that extends base action
     }
 
@@ -89,11 +83,19 @@ public class Unit : MonoBehaviour
 
     public Animator GetAnimator() => unitAnimator;
 
-    public MoveAction GetMoveAction() => moveAction;
-
-    public SpinAction GetSpinAction() => spinAction;
-
-    public ShootAction GetShootAction() => shootAction;
+    // Using Generics we'll grab the action types so we don't have to create a new one each time in unit
+    // This same idea can be used in an ability system. 
+    public T GetAction<T>() where T : BaseAction // only valid types that extend base action0
+    {
+        foreach (BaseAction baseAction in baseActionArray) // Cycle through all actions attached to this unit
+        {
+            if(baseAction is T) // if this action is of type T
+            {
+                return (T)baseAction; // return the base action
+            }
+        }
+        return null; // or dont
+    }
     public GridPosition GetGridPosition() => gridPosition;
 
     public Vector3 GetWorldPosition() => transform.position;

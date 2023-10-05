@@ -11,6 +11,12 @@ public class LevelGrid : MonoBehaviour
 
     [SerializeField] private Transform gridDebugObjectPrefab;
     private GridSystem<GridObject> gridSystem;
+
+    // these int values will be setup when making connection with level grid so they only need to be defined once
+    [SerializeField] private int width;
+    [SerializeField] private int height;
+    [SerializeField] private int cellSize;
+
     private void Awake()
     {
         if (Instance != null)
@@ -20,11 +26,17 @@ public class LevelGrid : MonoBehaviour
             return;
         }
         Instance = this;
-        gridSystem = new GridSystem<GridObject>(15, 15, 2f, 
+
+        gridSystem = new GridSystem<GridObject>(width, height, cellSize, 
             (GridSystem<GridObject> g, GridPosition gridPosition) => new GridObject(g, gridPosition));
       //  gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
     }
 
+    private void Start()
+    {
+        // This should be called before we have anything else to do with pathfinding
+         Pathfinding.Instance.Setup(width, height, cellSize);
+    }
     public void AddUnitAtGridPosition(GridPosition gridPosition, Unit unit)
     {
         GridObject gridObject = gridSystem.GetGridObject(gridPosition);// return the position of unit ongrid

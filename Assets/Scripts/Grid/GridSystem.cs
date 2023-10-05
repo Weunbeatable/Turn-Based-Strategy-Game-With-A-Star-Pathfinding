@@ -52,9 +52,10 @@ public class GridSystem<TGridObject>
         {
             for (int z = 0; z < height; z++)
             {  GridPosition gridPosition = new GridPosition(x, z);
+
                Transform debugTransform = GameObject.Instantiate(debugPrefab, GetWorldPosition(gridPosition), Quaternion.identity);
                GridDebugObject gridDebugObject = debugTransform.GetComponent<GridDebugObject>();
-                Debug.Log(GetGridObject(gridPosition));
+               Debug.Log(GetGridObject(gridPosition));
                gridDebugObject.SetGridObject(GetGridObject(gridPosition)); // instead of casting as gridObjcet we can now le tit be whatever type it is since  gridobject changed in the GridDebugClass to be of type object
               
             }

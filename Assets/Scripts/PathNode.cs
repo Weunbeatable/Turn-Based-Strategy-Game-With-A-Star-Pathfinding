@@ -15,6 +15,7 @@ public class PathNode
     private int hCost;
     private int fCost;
     private PathNode cameFromPathNode; // we need to store the reference of the pathnode we came from in order to reach this path node.  so we have to store this 
+    private bool isWalkable = true;
     public PathNode(GridPosition gridPosition)
     {
         this.gridPosition = gridPosition;
@@ -53,4 +54,11 @@ public class PathNode
     }
     public PathNode GetCameFromPathNode() => cameFromPathNode;
     public GridPosition GetGridPosition() => gridPosition;
+
+    public bool IsWalkable() => isWalkable;
+    public void SetIsWalkable(bool isWalkable)
+    {
+        this.isWalkable = isWalkable;
+
+    }
 }

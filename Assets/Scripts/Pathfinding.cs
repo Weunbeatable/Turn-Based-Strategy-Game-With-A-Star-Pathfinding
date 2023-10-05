@@ -14,10 +14,13 @@ public class Pathfinding : MonoBehaviour
     private const int MOVE_DIAGONAL_COST = 14; 
 
     [SerializeField] private Transform gridDebugObjectPrefab;
+    [SerializeField] private LayerMask obstaclesLayerMask;
+
+
     // these int values will be setup when making connection with level grid so they only need to be defined once
     private int width;
     private int height;
-    private int cellSize;
+    private float cellSize;
     private GridSystem<PathNode> gridSystem; // store the pathnode here
    
     private void Awake()
@@ -31,9 +34,11 @@ public class Pathfinding : MonoBehaviour
         }
         Instance = this;
 
-        gridSystem = new GridSystem<PathNode>(10, 10, 2f, 
-            (GridSystem<PathNode> g, GridPosition gridPosition) => new PathNode(gridPosition));
-        gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
+    }
+
+    private void Start()
+    {
+      //  Pathfinding.Instance.Setup();
     }
 
     public List<GridPosition> FindPath(GridPosition startGridPosition, GridPosition endGridPosition)
@@ -91,6 +96,13 @@ public class Pathfinding : MonoBehaviour
                 {
                     continue;
                 }
+
+                //Check to see if the neighbour node is walkable
+                if (!neighbourNode.IsWalkable())
+                {
+                    closedList.Add(neighbourNode);
+                    continue; // skip all the unwalkable nodes with this script
+                }
                 // if not we keep going
                 int tentativeGCost = currentNode.GetGCost() + CalculateDistance(currentNode.GetGridPosition(), neighbourNode.GetGridPosition());
 
@@ -121,7 +133,7 @@ public class Pathfinding : MonoBehaviour
         int zDistance = Mathf.Abs(gridPositionDistance.z); // for consideration of diagonal
         // we can move diagonally for as many x's as there are z's i.e 1, 1 is just one diagonal and 1,2 is still one diagonal
         int remaining = (int)MathF.Abs(xDistance - zDistance); // we calculate heuristic cost for distance while keeping into account diagonal adn straight distance. 
-        return MOVE_DIAGONAL_COST *Mathf.Min(xDistance, zDistance) + MOVE_STRAIGHT_COST; // we want a positive value because we aren't going in the negative directino so we grab the ABS value;
+        return MOVE_DIAGONAL_COST * Mathf.Min(xDistance, zDistance) + MOVE_STRAIGHT_COST * remaining; // we want a positive value because we aren't going in the negative directino so we grab the ABS value;
     }
 
     private PathNode GetLowestFCostPathNode(List<PathNode> pathNodeList)
@@ -199,6 +211,37 @@ public class Pathfinding : MonoBehaviour
         return neighbourList;
     }
 
+    public void Setup(int width, int height, float cellSize)
+    {
+        this.width = width;
+        this.height = height; ;
+        this.cellSize = cellSize;
+
+
+        gridSystem = new GridSystem<PathNode>(width, height, cellSize,
+            (GridSystem<PathNode> g, GridPosition gridPosition) => new PathNode(gridPosition));
+
+        gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
+
+        //Cycle through whole list see if there is anything in there if there it is unwalkable otherwise walkable. 
+        for (int x = 0; x < width; x++)
+        {
+            for (int z = 0; z < height; z++)
+            {
+                GridPosition gridPosition = new GridPosition(x, z);
+                Vector3 WorldPosition = LevelGrid.Instance.GetWorldPosition(gridPosition); // origin of raycast position have to be careful because if origin is inside a collider it wont work
+                float raycastOffsetDistance = 5f; // raycast offset to prevent raycast origin being stuck in a collider at the start
+                // multiplying raycast offset distance by 2 will help to prevent this issue, alternatively using queries hit backface in the physics tab in project settings fixes this issue. 
+                if(Physics.Raycast(WorldPosition + Vector3.down * raycastOffsetDistance,
+                    Vector3.up,
+                    raycastOffsetDistance * 2,
+                    obstaclesLayerMask))
+                {
+                    GetNode(x, z).SetIsWalkable(false);
+                }
+            }
+        }
+    }
     private List<GridPosition> CalculatePath(PathNode endtNode)
     {
         // after creating list, start on final node, check if there is any node connected to it, if there is we add linked node to the list and make it the current node

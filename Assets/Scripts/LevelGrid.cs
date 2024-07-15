@@ -15,7 +15,7 @@ public class LevelGrid : MonoBehaviour
     // these int values will be setup when making connection with level grid so they only need to be defined once
     [SerializeField] private int width;
     [SerializeField] private int height;
-    [SerializeField] private int cellSize;
+    [SerializeField] private float cellSize;
 
     private void Awake()
     {

@@ -55,7 +55,7 @@ public class GridSystem<TGridObject>
 
                Transform debugTransform = GameObject.Instantiate(debugPrefab, GetWorldPosition(gridPosition), Quaternion.identity);
                GridDebugObject gridDebugObject = debugTransform.GetComponent<GridDebugObject>();
-               Debug.Log(GetGridObject(gridPosition));
+             //  Debug.Log(GetGridObject(gridPosition));
                gridDebugObject.SetGridObject(GetGridObject(gridPosition)); // instead of casting as gridObjcet we can now le tit be whatever type it is since  gridobject changed in the GridDebugClass to be of type object
               
             }
@@ -76,4 +76,9 @@ public class GridSystem<TGridObject>
     public int GetWidth() => width;
 
     public int GetHeight() => height;
+
+    public static implicit operator GridSystem<TGridObject>(GridSystem<PathNode> v)
+    {
+        throw new NotImplementedException();
+    }
 }

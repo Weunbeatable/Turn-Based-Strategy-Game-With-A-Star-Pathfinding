@@ -33,6 +33,7 @@ public class Pathfinding : MonoBehaviour
             return;
         }
         Instance = this;
+        Debug.Log("the " + Instance + "has been created");
 
     }
 
@@ -261,12 +262,11 @@ public class Pathfinding : MonoBehaviour
         pathNodeList.Reverse(); // this way the end node goes to the end of the list as it should be while the start node stays at the start. 
 
         List<GridPosition> gridPositionList = new List<GridPosition>();
-        IList list = gridPositionList;
-        for (int i = 0; i < list.Count; i++)
+        foreach (PathNode pathNode in pathNodeList)
         {
-            PathNode pathNode = (PathNode)list[i];
-            gridPositionList.Add(pathNode.GetGridPosition()); // go into path node to get the grid position. 
+            gridPositionList.Add(pathNode.GetGridPosition());
         }
+
 
         return gridPositionList;
     }

@@ -24,9 +24,11 @@ public class Testing : MonoBehaviour
                 Debug.DrawLine(
                     LevelGrid.Instance.GetWorldPosition(gridPositionList[i]),
                     LevelGrid.Instance.GetWorldPosition(gridPositionList[i + 1]),
-                    Color.cyan,
+                    Color.red,
                     10f
                     );
+                Debug.Log("Starting point is" + LevelGrid.Instance.GetWorldPosition(gridPositionList[i]));
+                Debug.Log("end point is " + LevelGrid.Instance.GetWorldPosition(gridPositionList[i + 1]));
             }
             
         }

@@ -10,13 +10,10 @@ public class MoveAction : BaseAction
     public event EventHandler OnStopMoving;
     [SerializeField] private int maxMoveDistance = 4; // for ease of testing this field will be serialized
     
-    private Vector3 targetPosition;
+    private List <Vector3> positionList;
+    // keep track of each following position 
+    private int currentPositionIndex;
     
-    protected override void Awake()
-    {
-        base.Awake(); // we'll run the base awake action first before calling target pos;
-        targetPosition = transform.position;
-    }
     // Update is called once per frame
     void Update()
     {
@@ -24,8 +21,13 @@ public class MoveAction : BaseAction
         {
             return;
         }
+        Vector3 targetPosition = positionList[currentPositionIndex];
         Vector3 moveDirection = (targetPosition - transform.position).normalized; // only care about direction so we normalize
         float stoppingDistance = .1f;
+
+        float rotateSpeed = 10f;
+        transform.forward = Vector3.Lerp(transform.forward, moveDirection, rotateSpeed * Time.deltaTime); // we'll lerp rotation to make it smoother
+
         if (Vector3.Distance(transform.position, targetPosition) > stoppingDistance)
         {
             
@@ -35,16 +37,31 @@ public class MoveAction : BaseAction
         }
         else
         {
-            OnStopMoving?.Invoke(this, EventArgs.Empty);
-            ActionComplete();
+            currentPositionIndex++;
+            // if gone past last index
+            if(currentPositionIndex >= positionList.Count)
+            {
+                // reached end of list so we should stop moving. 
+                OnStopMoving?.Invoke(this, EventArgs.Empty);
+                ActionComplete();
+            }
+           
         }
 
-        float rotateSpeed = 10f;
-        transform.forward = Vector3.Lerp(transform.forward, moveDirection, rotateSpeed * Time.deltaTime); // we'll lerp rotation to make it smoother
+       
     }
     public override void TakeAction(GridPosition gridPosition, Action onActionComplete)
     {
-        this.targetPosition = LevelGrid.Instance.GetWorldPosition(gridPosition);
+        List<GridPosition> pathGridPositionList = Pathfinding.Instance.FindPath(unit.GetGridPosition(), gridPosition, out int pathLength);
+
+        currentPositionIndex = 0;
+        positionList = new List<Vector3>(); // fill in position list.
+
+        foreach(GridPosition pathGridPosition in pathGridPositionList)
+        {
+            positionList.Add(LevelGrid.Instance.GetWorldPosition(pathGridPosition));
+        }
+
         OnStartMoving?.Invoke(this, EventArgs.Empty);
         ActionStart(onActionComplete);
     }
@@ -77,6 +94,24 @@ public class MoveAction : BaseAction
                 if (LevelGrid.Instance.HasAnyUnitOnGridPosition(testGridPosition))
                 {
                     continue; // Grid Position already occupied with another unit
+                }
+
+                if(!Pathfinding.Instance.IsWalkableGridPosition(testGridPosition))
+                {
+                    continue; // checking if spot is a walkable position. 
+                }
+
+                if (!Pathfinding.Instance.HasPath(unitGridposition, testGridPosition))
+                {
+                    continue; // checking for unreachable areas.
+                }
+
+                int pathFindingDistanceMultiplier = 10;
+                // path length costs were multiplied by 10 to work with ints instead of floats so the max distance check
+                // is also multiplied by 10 so it still works as it should. 
+                if (Pathfinding.Instance.GetPathLength(unitGridposition, testGridPosition) > maxMoveDistance * pathFindingDistanceMultiplier)
+                {
+                    continue; // path length is too long. 
                 }
 
                 validGridPositionList.Add(testGridPosition);

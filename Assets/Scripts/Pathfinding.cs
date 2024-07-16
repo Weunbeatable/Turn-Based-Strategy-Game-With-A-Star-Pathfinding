@@ -42,7 +42,7 @@ public class Pathfinding : MonoBehaviour
       //  Pathfinding.Instance.Setup();
     }
 
-    public List<GridPosition> FindPath(GridPosition startGridPosition, GridPosition endGridPosition)
+    public List<GridPosition> FindPath(GridPosition startGridPosition, GridPosition endGridPosition, out int pathLength)
     {
         // setup open and closed lists
         List<PathNode> openList = new List<PathNode>(); // nodes available for searching
@@ -83,6 +83,7 @@ public class Pathfinding : MonoBehaviour
             if(currentNode == endtNode) // that means we reached the final node
             {
                 //calculate path
+                pathLength = endtNode.GetFCost();
                 return CalculatePath(endtNode);
             }
             //remove node from open list then add to closed list
@@ -123,6 +124,7 @@ public class Pathfinding : MonoBehaviour
         }
         // no longer any open nodes and we still couldn't reach target
         //no path found
+        pathLength = 0;
         return null;
     }
 
@@ -222,7 +224,7 @@ public class Pathfinding : MonoBehaviour
         gridSystem = new GridSystem<PathNode>(width, height, cellSize,
             (GridSystem<PathNode> g, GridPosition gridPosition) => new PathNode(gridPosition));
 
-        gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
+        //gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
 
         //Cycle through whole list see if there is anything in there if there it is unwalkable otherwise walkable. 
         for (int x = 0; x < width; x++)
@@ -271,4 +273,19 @@ public class Pathfinding : MonoBehaviour
         return gridPositionList;
     }
 
+    public bool IsWalkableGridPosition(GridPosition gridPosition)
+    {
+        return gridSystem.GetGridObject(gridPosition).IsWalkable();
+    }
+
+    public bool HasPath(GridPosition startGridPosition, GridPosition endGridPosition)
+    {
+      return  FindPath(startGridPosition, endGridPosition, out int pathLength) != null; // checking if there is a valid path to walk to, helps for obscure obstacles. 
+    }
+
+    public int GetPathLength(GridPosition startGridPosition, GridPosition endGridPosition)
+    {
+        FindPath(startGridPosition, endGridPosition, out int pathLength);
+        return pathLength;
+    }
 }

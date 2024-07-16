@@ -14,7 +14,7 @@ public class Testing : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.T))
         {
-            GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(MouseWorld.GetPosition());
+      /*      GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(MouseWorld.GetPosition());
             GridPosition startGridPosition = new GridPosition(0, 0);
 
             List<GridPosition> gridPositionList =  Pathfinding.Instance.FindPath(startGridPosition, mouseGridPosition);
@@ -30,7 +30,7 @@ public class Testing : MonoBehaviour
                 Debug.Log("Starting point is" + LevelGrid.Instance.GetWorldPosition(gridPositionList[i]));
                 Debug.Log("end point is " + LevelGrid.Instance.GetWorldPosition(gridPositionList[i + 1]));
             }
-            
+            */
         }
     }
 

@@ -19,6 +19,8 @@ public class ShootAction : BaseAction
         CoolOff,
     }
 
+    [SerializeField] private LayerMask obstaclesLayerMask; 
+
     private State state;
     [SerializeField] private int maxShootDistance = 7;
     [SerializeField] float newShootingStateTime = 0.1f;
@@ -141,6 +143,22 @@ public class ShootAction : BaseAction
                 {
                     // if on same team ignore
                     continue;
+                }
+
+                // raycast from unit position to target pos to validate if you can shoot (avoid shooting through walls)
+                // also leaving it flexible to shoot over crates and low walls. so there should be a height check and it should use 
+                // vector3.up 
+                Vector3 unitWorldPosition = LevelGrid.Instance.GetWorldPosition(unitGridposition); // using unit world position since code was refactored to use unit position.
+                Vector3 shootDir = targetUnit.GetWorldPosition() - unitWorldPosition.normalized;
+                float unitShoulderHeight = 1.7f; // got that value using the units themselves. 
+              if (Physics.Raycast
+                    (unitWorldPosition + Vector3.up * unitShoulderHeight,
+                    shootDir,
+                    Vector3.Distance(unitWorldPosition, targetUnit.GetWorldPosition()),
+                    obstaclesLayerMask)) // if this raycast does hit something then its not a valid place to shoot. 
+                {
+                    // blocked by an obstacle
+                    continue; 
                 }
 
                 validGridPositionList.Add(testGridPosition);

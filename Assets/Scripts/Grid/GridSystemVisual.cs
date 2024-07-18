@@ -86,6 +86,30 @@ public class GridSystemVisual : MonoBehaviour
         }
     }
 
+    private void ShowGridPositionRangeSquare(GridPosition gridPosition, int range, GridVisualType gridVisualType)
+    {
+        List<GridPosition> gridPositionsList = new List<GridPosition>();
+
+        for (int x = -range; x <= range; x++) // get grid position values in x range
+        {
+            for (int z = -range; z <= range; z++) // get grid position values in z range
+            {
+                GridPosition testGridPosition = gridPosition + new GridPosition(x, z); // pass those into grid position list adding current grid position and all retrieved positions. 
+
+                // if the position is not valid
+                if (!LevelGrid.Instance.IsValidGridPosition(testGridPosition))
+                {
+                    continue;
+                }
+
+  
+                gridPositionsList.Add(testGridPosition);
+            }
+
+        }
+        ShowGridPositionList(gridPositionsList, gridVisualType); // After retreiving all these positions return the data and show it to the user
+    }
+
     //helper function to show areas of influence when using a targeting skill
     private void ShowGridPositionRange(GridPosition gridPosition, int range, GridVisualType gridVisualType)
     {
@@ -144,7 +168,16 @@ public class GridSystemVisual : MonoBehaviour
             case ShootAction shootAction:
                 gridVisualType = GridVisualType.Red;
 
+
                 ShowGridPositionRange(selectedUnit.GetGridPosition(), shootAction.GetMaxShootDistance(), GridVisualType.RedSoft);
+                break;
+            case GrenadeAction grenadeAction:
+                gridVisualType = GridVisualType.Yellow;
+                break;
+            case SwordAction swordAction:
+                gridVisualType = GridVisualType.Red;
+
+                ShowGridPositionRangeSquare(selectedUnit.GetGridPosition(), swordAction.GetMaxSwordDistance(), GridVisualType.RedSoft);
                 break;
         }
         ShowGridPositionList(

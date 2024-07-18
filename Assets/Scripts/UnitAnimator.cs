@@ -8,6 +8,9 @@ public class UnitAnimator : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private Transform projectilePrefab;
     [SerializeField] private Transform shootPointTransform;
+    [SerializeField] private Transform gunTransform;
+    [SerializeField] private Transform swordTransform;
+    [SerializeField] private bool hasSwappableWeapons; 
     [SerializeField] private float waitTime = .1f;
 
 
@@ -23,6 +26,26 @@ public class UnitAnimator : MonoBehaviour
         {
             shootAction.OnShoot += ShootAction_OnShoot;
         }
+        if (TryGetComponent<SwordAction>(out SwordAction swordAction))
+        {
+            swordAction.OnSwordActionStarted += SwordAction_OnSwordActionStarted;
+            swordAction.OnSwordActionCompleted += SwordAction_OnSwordActionCompleted;
+        }
+    }
+
+    private void Start()
+    {
+        EquipGun();
+    }
+    private void SwordAction_OnSwordActionCompleted(object sender, EventArgs e)
+    {
+        EquipGun();
+    }
+
+    private void SwordAction_OnSwordActionStarted(object sender, EventArgs e)
+    {
+        EquipSword();
+        animator.SetTrigger("MeleeSlash");
     }
 
     private void MoveAction_OnStartMoving(object sender, EventArgs e)
@@ -57,6 +80,26 @@ public class UnitAnimator : MonoBehaviour
             bulletPojectile.Setup(targetUnitShootAtPosition);
         }
         
+    }
+
+    private void EquipSword()
+    {
+        if(hasSwappableWeapons == true)
+        {
+            swordTransform.gameObject.SetActive(true);
+            gunTransform.gameObject.SetActive(false);
+        }
+        else { return; }
+    }
+
+    private void EquipGun()
+    {
+        if (hasSwappableWeapons == true)
+        {
+            swordTransform.gameObject.SetActive(false);
+            gunTransform.gameObject.SetActive(true);
+        }
+        else { return; }
     }
 }
 

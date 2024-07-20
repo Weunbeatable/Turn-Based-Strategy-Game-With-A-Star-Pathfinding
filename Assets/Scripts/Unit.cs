@@ -7,7 +7,7 @@ public class Unit : MonoBehaviour
 {
     [SerializeField] private Animator unitAnimator;
 
-    private const int ACTION_POINTS_MAX = 2;
+    private const int ACTION_POINTS_MAX = 5;
 
     public static event EventHandler OnAnyActionPointsChanged; // this will fire whenever action points change
     // this will be for a specific event that we are certain will change after changing action points. 

@@ -27,17 +27,9 @@ public class CameraCointroller : MonoBehaviour
 
     private void HandleZoom()
     {
-        float zoomAmount = 1f;
-        //if statement to test if its working correctly
-        // no need for delta time since scroll wheel movement works like getkeydown so movement is just one unit at a time.
-        if (Input.mouseScrollDelta.y > 0)
-        {
-            targetFollowOffset.y -= zoomAmount;
-        }
-        if (Input.mouseScrollDelta.y < 0)
-        {
-            targetFollowOffset.y += zoomAmount;
-        }
+        float zoomIncreaseAmount = 1f;
+        targetFollowOffset.y += InputManager.Instance.GetCameraZoomAmount() * zoomIncreaseAmount;
+
         //ensure user can't scroll too much in or out
         targetFollowOffset.y = Mathf.Clamp(targetFollowOffset.y, MIN_FOLLOW_Y_OFFSET, MAX_FOLLOW_Y_OFFSET);
 
@@ -51,6 +43,7 @@ public class CameraCointroller : MonoBehaviour
     {
         Vector3 rotationVector = new Vector3(0, 0, 0);
 
+        rotationVector.y = InputManager.Instance.GetCameraRotateAmount();
         if (Input.GetKey(KeyCode.Q))
         {
             rotationVector.y = +1f;
@@ -67,29 +60,13 @@ public class CameraCointroller : MonoBehaviour
     private void HandleMovement()
     {
         // move vector based on player input
-        Vector3 inputMoveDir = new Vector3(0, 0, 0);
-        if (Input.GetKey(KeyCode.W))
-        {
-            inputMoveDir.z = +1f;
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            inputMoveDir.z = -1f;
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            inputMoveDir.x = -1f;
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            inputMoveDir.x = +1f;
-        }
+        Vector2 inputMoveDir = InputManager.Instance.GetCameraMoveVector();
         float moveSpeed = 12f;
 
         // movement should be based on rotation instead of keeping the original vector
         // this way we can move properly when we rotate and not have a case where 
         // if rotated at 45 we still move along original vector (so moving right) etc.
-        Vector3 moveVector = transform.forward * inputMoveDir.z + transform.right * inputMoveDir.x;
+        Vector3 moveVector = transform.forward * inputMoveDir.y + transform.right * inputMoveDir.x;
         transform.position += moveVector * moveSpeed * Time.deltaTime;
     }
 }

@@ -14,7 +14,7 @@ public class MouseWorld : MonoBehaviour
     }
     public static Vector3 GetPosition() // we only want it on the class itself and not other instances hence static. 
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray ray = Camera.main.ScreenPointToRay(InputManager.Instance.GetMouseScreenPosition());
         Physics.Raycast(ray, out RaycastHit raycastHit, float.MaxValue, instance.mousePlaneLayerMAsk); // 1 << 6 way to change mask with bit shifting without using layermask
         return raycastHit.point;
     }

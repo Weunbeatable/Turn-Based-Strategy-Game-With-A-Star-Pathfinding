@@ -66,7 +66,7 @@ public class UnitActionSystem : MonoBehaviour
 
     private void HandleSelectedAction()
     {
-      if(Input.GetMouseButtonDown(0))
+      if(InputManager.Instance.IsMouseButtonDown())
         {
             // verify that you can actually move here using the grid position checks in level grid and grid system
             // If valid then call move action to move
@@ -102,9 +102,9 @@ public class UnitActionSystem : MonoBehaviour
     //Summary handles selecting indivudal units, fires raycast and checks for unit under mouse
     private bool TryHandleUnitSelection()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (InputManager.Instance.IsMouseButtonDown())
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Ray ray = Camera.main.ScreenPointToRay(InputManager.Instance.GetMouseScreenPosition());
             if (Physics.Raycast(ray, out RaycastHit raycastHit, float.MaxValue, unitLayerMask)) // 1 << 6 way to change mask with bit shifting without using layermask
             {
                 if (raycastHit.transform.TryGetComponent<Unit>(out Unit unit))

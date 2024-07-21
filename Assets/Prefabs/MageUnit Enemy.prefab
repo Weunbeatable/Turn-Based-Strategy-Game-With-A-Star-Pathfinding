@@ -5,9 +5,14 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    serializedVersion: 2
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -6613232197045434446, guid: 0798c83f92035cc4a88a1d12cd2d9e1e,
+        type: 3}
+      propertyPath: obstaclesLayerMask.m_Bits
+      value: 256
+      objectReference: {fileID: 0}
     - target: {fileID: -3105890039867812479, guid: 0798c83f92035cc4a88a1d12cd2d9e1e,
         type: 3}
       propertyPath: ragdollPrefab
@@ -84,6 +89,71 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1501323904679853834, guid: 0798c83f92035cc4a88a1d12cd2d9e1e,
+        type: 3}
+      propertyPath: grenadeProjectilePrefab
+      value: 
+      objectReference: {fileID: 4234408690298610631, guid: d293cbb32a4d411478034a71b0e80f66,
+        type: 3}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 274788820199947859, guid: 0798c83f92035cc4a88a1d12cd2d9e1e,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -4381199000907844715}
+    - targetCorrespondingSourceObject: {fileID: 274788820199947859, guid: 0798c83f92035cc4a88a1d12cd2d9e1e,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -288545719704124269}
+    - targetCorrespondingSourceObject: {fileID: 274788820199947859, guid: 0798c83f92035cc4a88a1d12cd2d9e1e,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -8847069016285049009}
   m_SourcePrefab: {fileID: 100100000, guid: 0798c83f92035cc4a88a1d12cd2d9e1e, type: 3}
+--- !u!1 &5378573689015093748 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 274788820199947859, guid: 0798c83f92035cc4a88a1d12cd2d9e1e,
+    type: 3}
+  m_PrefabInstance: {fileID: 5293056380977412007}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &-4381199000907844715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5378573689015093748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da9f20693f332554482cdecfdce9fd84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grenadeProjectilePrefab: {fileID: 0}
+--- !u!114 &-288545719704124269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5378573689015093748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f49d7ede7cf6ef04782c30f0dd2708e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  beforeHitStateTime: 0.7
+  afterHitStateTime: 0.5
+--- !u!114 &-8847069016285049009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5378573689015093748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: defdb57b6c278a040bfc04ac679b6209, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

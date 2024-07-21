@@ -50,7 +50,7 @@ public class Pathfinding : MonoBehaviour
 
         //add start node
         PathNode startNode = gridSystem.GetGridObject(startGridPosition);
-        PathNode endtNode = gridSystem.GetGridObject(endGridPosition);
+        PathNode endNode = gridSystem.GetGridObject(endGridPosition);
         openList.Add(startNode);
 
         // cycle through nodes and reset states
@@ -80,11 +80,11 @@ public class Pathfinding : MonoBehaviour
             PathNode currentNode = GetLowestFCostPathNode(openList); // don't want only first position, we want node that has lowest f cost so algorithm calculates quickly
 
             // check if current node is final node
-            if(currentNode == endtNode) // that means we reached the final node
+            if(currentNode == endNode) // that means we reached the final node
             {
                 //calculate path
-                pathLength = endtNode.GetFCost();
-                return CalculatePath(endtNode);
+                pathLength = endNode.GetFCost();
+                return CalculatePath(endNode);
             }
             //remove node from open list then add to closed list
             openList.Remove(currentNode);

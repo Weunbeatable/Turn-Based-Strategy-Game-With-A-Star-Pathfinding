@@ -18,7 +18,7 @@ public class Door : MonoBehaviour, IInteractable
     private void Start()
     {
         gridPosition = LevelGrid.Instance.GetGridPosition(transform.position);// get position door sits on
-        LevelGrid.Instance.SetDoorAtGridPosition(gridPosition, this);// set door this script is attached to at that position
+        LevelGrid.Instance.SetInteractableAtGridPosition(gridPosition, this);// set door this script is attached to at that position
 
         if (isOpen)
         {

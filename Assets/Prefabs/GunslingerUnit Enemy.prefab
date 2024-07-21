@@ -5,9 +5,15 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    serializedVersion: 2
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -5401886079756952590, guid: 4f8194231db9d704099c8703b8431a98,
+        type: 3}
+      propertyPath: grenadeProjectilePrefab
+      value: 
+      objectReference: {fileID: 4234408690298610631, guid: d293cbb32a4d411478034a71b0e80f66,
+        type: 3}
     - target: {fileID: -5220084095048790809, guid: 4f8194231db9d704099c8703b8431a98,
         type: 3}
       propertyPath: ragdollPrefab
@@ -23,6 +29,11 @@ PrefabInstance:
         type: 3}
       propertyPath: newCoolOffStateTime
       value: 2.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4634243751000887722, guid: 4f8194231db9d704099c8703b8431a98,
+        type: 3}
+      propertyPath: obstaclesLayerMask.m_Bits
+      value: 256
       objectReference: {fileID: 0}
     - target: {fileID: 6066056639572820050, guid: 4f8194231db9d704099c8703b8431a98,
         type: 3}
@@ -95,5 +106,47 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6066056639807123701, guid: 4f8194231db9d704099c8703b8431a98,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -1819558809596310145}
+    - targetCorrespondingSourceObject: {fileID: 6066056639807123701, guid: 4f8194231db9d704099c8703b8431a98,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -6576541224502002335}
   m_SourcePrefab: {fileID: 100100000, guid: 4f8194231db9d704099c8703b8431a98, type: 3}
+--- !u!1 &2920786601252202464 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6066056639807123701, guid: 4f8194231db9d704099c8703b8431a98,
+    type: 3}
+  m_PrefabInstance: {fileID: 8981938729853769493}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &-1819558809596310145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2920786601252202464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f49d7ede7cf6ef04782c30f0dd2708e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  beforeHitStateTime: 0.7
+  afterHitStateTime: 0.5
+--- !u!114 &-6576541224502002335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2920786601252202464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: defdb57b6c278a040bfc04ac679b6209, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

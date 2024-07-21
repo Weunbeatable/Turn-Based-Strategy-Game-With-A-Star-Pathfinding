@@ -31,7 +31,7 @@ public class VariousTranslateMove : MonoBehaviour {
 
         if (m_Time + m_reduceTime < Time.time && m_reduceTime != 0)
         {
-            m_power -= Time.deltaTime/10;
+            m_power -= Time.deltaTime;
             m_power = Mathf.Clamp01(m_power);
         }
     }

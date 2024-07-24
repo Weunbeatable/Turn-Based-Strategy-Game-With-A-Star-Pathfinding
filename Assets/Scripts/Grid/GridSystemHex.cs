@@ -3,14 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GridSystem<TGridObject> 
+public class GridSystemHex<TGridObject> 
 {
+    private const float HEX_VERTICAL_OFFSET_MULTIPLIER = 0.75f;
     private int width; 
     private int height;
     private float cellSize;
     private TGridObject[,] gridObjectArray;
+    
                                                             // this helps us bypass C# limit on contstraints by passing a delegate which will create our object
-    public GridSystem(int width, int height, float cellSize, Func<GridSystem<TGridObject>, GridPosition, TGridObject> createGridObject) 
+    public GridSystemHex(int width, int height, float cellSize, Func<GridSystemHex<TGridObject>, GridPosition, TGridObject> createGridObject) 
     {
         this.width = width;
         this.height = height;
@@ -32,7 +34,12 @@ public class GridSystem<TGridObject>
     // convert grid position to world pos
     public Vector3 GetWorldPosition(GridPosition gridPosition)
     {
-        return new Vector3(gridPosition.x, 0, gridPosition.z) * cellSize;
+        return
+            new Vector3(gridPosition.x, 0, 0) * cellSize +
+            new Vector3(0, 0, gridPosition.z) * cellSize  * HEX_VERTICAL_OFFSET_MULTIPLIER + 
+           (((gridPosition.z % 2) ==1 ) ? new Vector3(1,0,0) * cellSize * 0.5f : Vector3.zero);
+        // terinary operator to allow hexagon grids to line up, if grid postion is odd an offset is added
+        // other wise none will be added aka Vector3.zero 
   
     }
 
@@ -77,7 +84,7 @@ public class GridSystem<TGridObject>
 
     public int GetHeight() => height;
 
-    public static implicit operator GridSystem<TGridObject>(GridSystem<PathNode> v)
+    public static implicit operator GridSystemHex<TGridObject>(GridSystemHex<PathNode> v)
     {
         throw new NotImplementedException();
     }

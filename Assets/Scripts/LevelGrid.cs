@@ -10,7 +10,7 @@ public class LevelGrid : MonoBehaviour
     public event EventHandler OnAnyUnitMovedGridPosition;
 
     [SerializeField] private Transform gridDebugObjectPrefab;
-    private GridSystem<GridObject> gridSystem;
+    private GridSystemHex<GridObject> gridSystem;
 
     // these int values will be setup when making connection with level grid so they only need to be defined once
     [SerializeField] private int width;
@@ -27,8 +27,8 @@ public class LevelGrid : MonoBehaviour
         }
         Instance = this;
 
-        gridSystem = new GridSystem<GridObject>(width, height, cellSize, 
-            (GridSystem<GridObject> g, GridPosition gridPosition) => new GridObject(g, gridPosition));
+        gridSystem = new GridSystemHex<GridObject>(width, height, cellSize, 
+            (GridSystemHex<GridObject> g, GridPosition gridPosition) => new GridObject(g, gridPosition));
       //  gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
     }
 

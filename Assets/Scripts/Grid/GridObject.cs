@@ -5,13 +5,13 @@ using UnityEngine;
 public class GridObject 
 {
     // our object (aka unit) on the grid
-    private GridSystem<GridObject> gridSystem;
+    private GridSystemHex<GridObject> gridSystem;
     private GridPosition gridPosition;
     private List<Unit> unitList;
     private IInteractable interactable;
    [SerializeField] private Unit unit { get; set; }
 
-    public GridObject(GridSystem<GridObject> gridSystem, GridPosition gridPosition)
+    public GridObject(GridSystemHex<GridObject> gridSystem, GridPosition gridPosition)
     {
         this.gridSystem = gridSystem;
         this.gridPosition = gridPosition;

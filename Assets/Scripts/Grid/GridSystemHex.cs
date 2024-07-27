@@ -46,11 +46,39 @@ public class GridSystemHex<TGridObject>
     //convert World Pos to Grid Pos
     public GridPosition GetGridPosition(Vector3 worldPosition)
     {
-        return new GridPosition(
+        GridPosition roughXZ = new GridPosition(
         Mathf.RoundToInt(worldPosition.x / cellSize),
-        Mathf.RoundToInt(worldPosition.z / cellSize)
+        Mathf.RoundToInt(worldPosition.z / cellSize / HEX_VERTICAL_OFFSET_MULTIPLIER) // dividng removes the compounding offset mouse position error when moving up the grid. 
         );
-            
+
+        bool oddRow = roughXZ.z % 2 == 1;
+        List<GridPosition> neighbourGridPositionList = new List<GridPosition>
+        {
+            roughXZ + new GridPosition(-1, 0),
+            roughXZ + new GridPosition(+1, 0),
+
+            roughXZ + new GridPosition(0, +1),
+            roughXZ + new GridPosition(0, -1),
+
+            roughXZ + new GridPosition(oddRow ? +1 : -1, +1),
+            roughXZ + new GridPosition(oddRow ? -1 : +1, -1),
+        };
+
+        GridPosition closestGridPosition = roughXZ;
+
+        //test world positions in foreach loop then get the world position for each grid position,
+        // compare distance of the neighbour position to the roughxz, if the neighbour is closer than
+        // the new closest point is that neighbour position. 
+        foreach(GridPosition neighbourgridPosition in neighbourGridPositionList)
+        {
+          if(  Vector3.Distance(worldPosition, GetWorldPosition(neighbourgridPosition)) <
+                Vector3.Distance(worldPosition, GetWorldPosition(closestGridPosition)))
+            {
+                // closer than the closest
+                closestGridPosition = neighbourgridPosition;
+            }
+        }
+        return closestGridPosition;
     }
 
     public void CreateDebugObjects(Transform debugPrefab)
@@ -89,3 +117,12 @@ public class GridSystemHex<TGridObject>
         throw new NotImplementedException();
     }
 }
+/*
+ * original attempt at closest position check (somewhat right idea, wrong approach) .
+ foreach(GridPosition gridPosition in neighbourGridPositionList)
+        {
+            if(gridPosition.z < roughXZ.z)
+            {
+                return gridPosition;
+            }
+        }*/

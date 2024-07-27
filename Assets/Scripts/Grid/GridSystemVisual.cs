@@ -66,21 +66,9 @@ public class GridSystemVisual : MonoBehaviour
         LevelGrid.Instance.OnAnyUnitMovedGridPosition += LevelGrid_OnAnyUnitMovedGridPosition;
         Unit.OnAnyUnitDead += Unit_OnAnyUnitDead; // in the event that a unit dies we should update the visual so its not showing us incorrect information on who we can target.
 
-       // UpdateGridVisual();
-
-        for (int x = 0; x < LevelGrid.Instance.GetWidth() ; x++)
-        {
-            for (int z = 0; z < LevelGrid.Instance.GetHeight() ; z++)
-            {
-                gridSystemVisualSingleArray[x, z].
-                    Show(GetGridVisualTypeMaterial(GridVisualType.White));
-            }
-        }
+        UpdateGridVisual();
     }
-    private void Update()
-    {
-       
-    }
+  
 
  
     public void HideAllGridPosition()

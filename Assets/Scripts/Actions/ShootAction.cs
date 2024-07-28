@@ -123,7 +123,7 @@ public class ShootAction : BaseAction
         {
             for (int z = -maxShootDistance; z <= maxShootDistance; z++)
             {
-                GridPosition offsetGridPostion = new GridPosition(x, z);
+                GridPosition offsetGridPostion = new GridPosition(x, z, 0);
                 GridPosition testGridPosition = unitGridposition + offsetGridPostion;
 
                 // If not valid we want to discard that position, if it is we want to keep it.

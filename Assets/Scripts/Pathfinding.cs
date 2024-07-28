@@ -56,7 +56,7 @@ public class Pathfinding : MonoBehaviour
         {
             for (int z = 0; z < gridSystem.GetHeight(); z++)
             {
-                GridPosition gridPosition = new GridPosition(x, z);
+                GridPosition gridPosition = new GridPosition(x, z, 0);
                 PathNode pathNode = gridSystem.GetGridObject(gridPosition);
 
 
@@ -148,7 +148,7 @@ public class Pathfinding : MonoBehaviour
 
     private PathNode GetNode(int x, int z)
     {
-        return gridSystem.GetGridObject(new GridPosition(x, z));
+        return gridSystem.GetGridObject(new GridPosition(x, z, 0));
     }
     private List<PathNode> GetNeighbourList(PathNode currentNode)
     {
@@ -218,7 +218,7 @@ public class Pathfinding : MonoBehaviour
                 
         return neighbourList;
     }
-
+    //TODO: modify to show several floors. 
     public void Setup(int width, int height, float cellSize)
     {
         this.width = width;
@@ -226,7 +226,7 @@ public class Pathfinding : MonoBehaviour
         this.cellSize = cellSize;
 
 
-        gridSystem = new GridSystemHex<PathNode>(width, height, cellSize,
+        gridSystem = new GridSystemHex<PathNode>(width, height, cellSize, 0, LevelGrid.FLOOR_HEIGHT,
             (GridSystemHex<PathNode> g, GridPosition gridPosition) => new PathNode(gridPosition));
 
         //gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
@@ -236,7 +236,7 @@ public class Pathfinding : MonoBehaviour
         {
             for (int z = 0; z < height; z++)
             {
-                GridPosition gridPosition = new GridPosition(x, z);
+                GridPosition gridPosition = new GridPosition(x, z, 0);
                 Vector3 WorldPosition = LevelGrid.Instance.GetWorldPosition(gridPosition); // origin of raycast position have to be careful because if origin is inside a collider it wont work
                 float raycastOffsetDistance = 5f; // raycast offset to prevent raycast origin being stuck in a collider at the start
                 // multiplying raycast offset distance by 2 will help to prevent this issue, alternatively using queries hit backface in the physics tab in project settings fixes this issue. 

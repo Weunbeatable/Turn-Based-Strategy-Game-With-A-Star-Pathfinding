@@ -37,7 +37,7 @@ public class InteractAction : BaseAction
         {
             for (int z = -maxInteractDistance; z <= maxInteractDistance; z++)
             {
-                GridPosition offsetGridPostion = new GridPosition(x, z);
+                GridPosition offsetGridPostion = new GridPosition(x, z, 0); // 0 will be the test offset for the floor
                 GridPosition testGridPosition = unitGridposition + offsetGridPostion;
 
                 // If not valid we want to discard that position, if it is we want to keep it.

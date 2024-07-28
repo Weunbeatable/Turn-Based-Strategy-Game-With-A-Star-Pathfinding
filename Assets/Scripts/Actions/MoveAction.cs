@@ -78,7 +78,7 @@ public class MoveAction : BaseAction
         {
             for (int z = -maxMoveDistance; z <= maxMoveDistance; z++)
             {
-                GridPosition offsetGridPostion = new GridPosition(x, z);
+                GridPosition offsetGridPostion = new GridPosition(x, z, 0);
                 GridPosition testGridPosition = unitGridposition + offsetGridPostion;
 
                 // If not valid we want to discard that position, if it is we want to keep it.

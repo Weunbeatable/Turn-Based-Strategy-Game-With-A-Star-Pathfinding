@@ -38,7 +38,7 @@ public class GrenadeAction : BaseAction
         {
             for (int z = -maxThrowDistance; z <= maxThrowDistance; z++)
             {
-                GridPosition offsetGridPostion = new GridPosition(x, z);
+                GridPosition offsetGridPostion = new GridPosition(x, z, 0);
                 GridPosition testGridPosition = unitGridposition + offsetGridPostion;
 
                 // If not valid we want to discard that position, if it is we want to keep it.

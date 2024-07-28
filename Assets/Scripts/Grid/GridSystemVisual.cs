@@ -27,7 +27,7 @@ public class GridSystemVisual : MonoBehaviour
     [SerializeField] private Transform gridSystemVisualSinglePrefab;
     [SerializeField] private List<GridVisualTypeMaterial> gridVisualTypeMaterialList;
 
-    private GridSystemVisualSingle[,] gridSystemVisualSingleArray;
+    private GridSystemVisualSingle[,,] gridSystemVisualSingleArray;
 
     private void Awake()
     {
@@ -43,22 +43,28 @@ public class GridSystemVisual : MonoBehaviour
     void Start()
     {
         // visual single on every grid position
-            gridSystemVisualSingleArray = new GridSystemVisualSingle[
-            LevelGrid.Instance.GetWidth(),
-            LevelGrid.Instance.GetHeight()
-            ];
+        gridSystemVisualSingleArray = new GridSystemVisualSingle[
+        LevelGrid.Instance.GetWidth(),
+        LevelGrid.Instance.GetHeight(),
+        LevelGrid.Instance.GetFloorAmount()
+        ]; ;
         for (int x = 0; x < LevelGrid.Instance.GetWidth(); x++)
         {
             for (int z = 0; z < LevelGrid.Instance.GetHeight(); z++)
             {
-                GridPosition gridPosition = new GridPosition(x, z);
+                for (int floor = 0; floor < LevelGrid.Instance.GetFloorAmount(); floor++)
+                {
 
-                Transform gridSystemVisualSingleTransofm =
 
-                Instantiate (gridSystemVisualSinglePrefab, 
-                LevelGrid.Instance.GetWorldPosition(gridPosition), Quaternion.identity);
+                    GridPosition gridPosition = new GridPosition(x, z, floor); //TODO modify to show visuals for all floors
 
-                gridSystemVisualSingleArray[x, z] = gridSystemVisualSingleTransofm.GetComponent<GridSystemVisualSingle>();
+                    Transform gridSystemVisualSingleTransofm =
+
+                    Instantiate(gridSystemVisualSinglePrefab,
+                    LevelGrid.Instance.GetWorldPosition(gridPosition), Quaternion.identity);
+
+                    gridSystemVisualSingleArray[x, z, floor] = gridSystemVisualSingleTransofm.GetComponent<GridSystemVisualSingle>();
+                }
             }
         }
         //instead of the grid visual running every frame we want it running on selection
@@ -78,7 +84,10 @@ public class GridSystemVisual : MonoBehaviour
         {
             for (int z = 0; z < LevelGrid.Instance.GetHeight(); z++)
             {
-                gridSystemVisualSingleArray[x, z].Hide();
+                for (int floor = 0; floor < LevelGrid.Instance.GetFloorAmount(); floor++)
+                {
+                    gridSystemVisualSingleArray[x, z, floor].Hide();
+                }
             }
         }
     }
@@ -91,7 +100,7 @@ public class GridSystemVisual : MonoBehaviour
         {
             for (int z = -range; z <= range; z++) // get grid position values in z range
             {
-                GridPosition testGridPosition = gridPosition + new GridPosition(x, z); // pass those into grid position list adding current grid position and all retrieved positions. 
+                GridPosition testGridPosition = gridPosition + new GridPosition(x, z, gridPosition.floor); // pass those into grid position list adding current grid position and all retrieved positions. 
 
                 // if the position is not valid
                 if (!LevelGrid.Instance.IsValidGridPosition(testGridPosition))
@@ -116,7 +125,7 @@ public class GridSystemVisual : MonoBehaviour
         {
             for (int z = -range; z <= range; z++) // get grid position values in z range
             {
-                GridPosition testGridPosition = gridPosition + new GridPosition(x, z); // pass those into grid position list adding current grid position and all retrieved positions. 
+                GridPosition testGridPosition = gridPosition + new GridPosition(x, z, gridPosition.floor); // pass those into grid position list adding current grid position and all retrieved positions. 
 
                 // if the position is not valid
                 if (!LevelGrid.Instance.IsValidGridPosition(testGridPosition))
@@ -141,7 +150,7 @@ public class GridSystemVisual : MonoBehaviour
     {
         foreach (GridPosition grid in gridPositionList)
         {
-            gridSystemVisualSingleArray[grid.x, grid.z].Show(GetGridVisualTypeMaterial(gridVisualType));
+            gridSystemVisualSingleArray[grid.x, grid.z, grid.floor].Show(GetGridVisualTypeMaterial(gridVisualType));
         }
     }
     private void UpdateGridVisual() // will update when things happen

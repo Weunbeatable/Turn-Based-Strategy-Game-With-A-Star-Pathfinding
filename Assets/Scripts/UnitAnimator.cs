@@ -20,6 +20,7 @@ public class UnitAnimator : MonoBehaviour
         {
             moveAction.OnStartMoving += MoveAction_OnStartMoving;
             moveAction.OnStopMoving += MoveAction_OnStopMoving;
+            moveAction.onChangedFloorStarted += MoveAction_onChangedFloorStarted;
         }
 
       if(TryGetComponent<ShootAction>(out ShootAction shootAction))
@@ -31,6 +32,21 @@ public class UnitAnimator : MonoBehaviour
             swordAction.OnSwordActionStarted += SwordAction_OnSwordActionStarted;
             swordAction.OnSwordActionCompleted += SwordAction_OnSwordActionCompleted;
         }
+    }
+
+    private void MoveAction_onChangedFloorStarted(object sender, MoveAction.OnChangeFloorsStartedEventArgs e)
+    {
+        if(e.targetGridPosition.floor > e.unitGridPosition.floor)
+        {
+            // Jump
+            animator.SetTrigger("JumpUp");
+        }
+        else
+        {
+            // Drop 
+            animator.SetTrigger("JumpDown");
+        }
+        
     }
 
     private void Start()

@@ -8,13 +8,21 @@ public class MoveAction : BaseAction
     //Since actions belong to the unit design wise the action should ask the Unit for a grid position
     public event EventHandler OnStartMoving;
     public event EventHandler OnStopMoving;
+    public event EventHandler<OnChangeFloorsStartedEventArgs> onChangedFloorStarted;
+    public class OnChangeFloorsStartedEventArgs: EventArgs
+    {
+        public GridPosition unitGridPosition;
+        public GridPosition targetGridPosition;
+    }
     [SerializeField] private int maxMoveDistance = 4; // for ease of testing this field will be serialized
     
     private List <Vector3> positionList;
     // keep track of each following position 
     private int currentPositionIndex;
     private bool isChangingFloors;
-    
+    [SerializeField] private float differentFloorsTeleportTimer;
+    [SerializeField] private float differentFloorsTeleportTimerMax = .5f;
+
     // Update is called once per frame
     void Update()
     {
@@ -23,21 +31,48 @@ public class MoveAction : BaseAction
             return;
         }
         Vector3 targetPosition = positionList[currentPositionIndex];
-        Vector3 moveDirection = (targetPosition - transform.position).normalized; // only care about direction so we normalize
-        float stoppingDistance = .1f;
-
-        float rotateSpeed = 10f;
-        transform.forward = Vector3.Lerp(transform.forward, moveDirection, rotateSpeed * Time.deltaTime); // we'll lerp rotation to make it smoother
-
-        if (Vector3.Distance(transform.position, targetPosition) > stoppingDistance)
+        if (isChangingFloors)
         {
-            
-            float moveSpeed = 4;
-            transform.position += moveDirection * moveSpeed * Time.deltaTime; // framerate independent movement
-                                                                             // using transform. forward/up/right * a vector allows for easy rotation
+            // stop and Teleport Logic
+            // have unit rotate in the proper direction without facing up or down 
+            Vector3 targetSameFloorPosition = targetPosition;
+            targetSameFloorPosition.y = transform.position.y;
+
+            Vector3 rotateDirection = (targetSameFloorPosition - transform.position).normalized; // only care about direction so we normalize
+
+
+            float rotateSpeed = 10f;
+            transform.forward = Vector3.Slerp(transform.forward, rotateDirection, rotateSpeed * Time.deltaTime); // we'll lerp rotation to make it smoother
+
+
+
+            differentFloorsTeleportTimer -= Time.deltaTime;
+            if(differentFloorsTeleportTimer < 0f)
+            {
+                isChangingFloors = false;
+                // teleport unit
+                transform.position = targetPosition;
+            }
         }
         else
         {
+            // regular move logic   
+            Vector3 moveDirection = (targetPosition - transform.position).normalized; // only care about direction so we normalize
+            
+
+            float rotateSpeed = 10f;
+            // code has been updated to use Slerp as lerp works with Vectors and slerp with rotations and is better suited
+            // for moving units between floors (having them rotate properly). 
+            transform.forward = Vector3.Slerp(transform.forward, moveDirection, rotateSpeed * Time.deltaTime); // we'll lerp rotation to make it smoother
+           
+            float moveSpeed = 4f;
+            transform.position += moveDirection * moveSpeed * Time.deltaTime; // framerate independent movement
+                                                                              // using transform. forward/up/right * a vector allows for easy rotation
+        }
+
+        float stoppingDistance = .1f;
+        if (Vector3.Distance(transform.position, targetPosition) < stoppingDistance)
+        {    
             currentPositionIndex++;
             // if gone past last index
             if(currentPositionIndex >= positionList.Count)
@@ -56,7 +91,13 @@ public class MoveAction : BaseAction
                 {
                     // going to different floors
                     isChangingFloors = true;
+                    differentFloorsTeleportTimer = differentFloorsTeleportTimerMax;
 
+                    onChangedFloorStarted?.Invoke(this, new OnChangeFloorsStartedEventArgs
+                    {
+                        unitGridPosition = unitGridPosition,
+                        targetGridPosition = targetGridPosition,
+                    });
                 }
             }
         }

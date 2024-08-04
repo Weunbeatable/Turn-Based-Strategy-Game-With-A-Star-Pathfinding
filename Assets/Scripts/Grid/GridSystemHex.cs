@@ -119,6 +119,8 @@ public class GridSystemHex<TGridObject>
 
     public int GetHeight() => height;
 
+    public int GetFloor() => floor;
+
     public static implicit operator GridSystemHex<TGridObject>(GridSystemHex<PathNode> v)
     {
         throw new NotImplementedException();

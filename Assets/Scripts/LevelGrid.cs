@@ -45,7 +45,7 @@ public class LevelGrid : MonoBehaviour
     private void Start()
     {
         // This should be called before we have anything else to do with pathfinding
-         Pathfinding.Instance.Setup(width, height, cellSize);
+         Pathfinding.Instance.Setup(width, height, cellSize, floorAmount);
     }
     // function to get a grid system for a given floor
     private GridSystemHex<GridObject> GetGridSystem(int floor)
@@ -98,8 +98,19 @@ public class LevelGrid : MonoBehaviour
     public Vector3 GetWorldPosition(GridPosition gridPosition) => GetGridSystem(gridPosition.floor).GetWorldPosition(gridPosition);
 
     // reference To Grid Systems validation so it can be accessed properly by other scripts without weird class access and a;llowing for proper layers of abstraction
-    public bool IsValidGridPosition(GridPosition gridPosition) => GetGridSystem(gridPosition.floor).IsValidGridPosition(gridPosition);
-
+    public bool IsValidGridPosition(GridPosition gridPosition)
+    {
+        // used to assume there was always a grid system for the floor, that assumption wont work for 
+        // multi levels so it should check if its valid
+        if (gridPosition.floor < 0 || gridPosition.floor >= floorAmount)
+        {
+            return false;
+        }
+        else
+        {
+          return  GetGridSystem(gridPosition.floor).IsValidGridPosition(gridPosition);
+        }
+    }
     // The assumption is all floors have the same shape so the width & height can be gotten from item 0
     public int GetWidth() => GetGridSystem(0).GetWidth();
 

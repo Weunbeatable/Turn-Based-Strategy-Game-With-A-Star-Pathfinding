@@ -13,6 +13,7 @@ public class MoveAction : BaseAction
     private List <Vector3> positionList;
     // keep track of each following position 
     private int currentPositionIndex;
+    private bool isChangingFloors;
     
     // Update is called once per frame
     void Update()
@@ -44,8 +45,20 @@ public class MoveAction : BaseAction
                 // reached end of list so we should stop moving. 
                 OnStopMoving?.Invoke(this, EventArgs.Empty);
                 ActionComplete();
+            } else // if next point involves  a jump or fall 
+            // different floors indicate jump or drop
+            {
+                targetPosition = positionList[currentPositionIndex];
+                GridPosition targetGridPosition = LevelGrid.Instance.GetGridPosition(targetPosition);
+                GridPosition unitGridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
+
+                if(targetGridPosition.floor != unitGridPosition.floor)
+                {
+                    // going to different floors
+                    isChangingFloors = true;
+
+                }
             }
-           
         }
 
        
@@ -78,43 +91,46 @@ public class MoveAction : BaseAction
         {
             for (int z = -maxMoveDistance; z <= maxMoveDistance; z++)
             {
-                GridPosition offsetGridPostion = new GridPosition(x, z, 0);
-                GridPosition testGridPosition = unitGridposition + offsetGridPostion;
-
-                // If not valid we want to discard that position, if it is we want to keep it.
-                if (!LevelGrid.Instance.IsValidGridPosition(testGridPosition))
+                for (int floor = -maxMoveDistance; floor <= maxMoveDistance; floor++)
                 {
-                  continue; // skip to the next iteration of the loop if not valid
-                }
+                    GridPosition offsetGridPostion = new GridPosition(x, z, floor);
+                    GridPosition testGridPosition = unitGridposition + offsetGridPostion;
 
-                if(unitGridposition == testGridPosition)
-                {
-                    continue; // same grid position where the unit is already at
-                }
-                if (LevelGrid.Instance.HasAnyUnitOnGridPosition(testGridPosition))
-                {
-                    continue; // Grid Position already occupied with another unit
-                }
+                    // If not valid we want to discard that position, if it is we want to keep it.
+                    if (!LevelGrid.Instance.IsValidGridPosition(testGridPosition))
+                    {
+                        continue; // skip to the next iteration of the loop if not valid
+                    }
 
-                if(!Pathfinding.Instance.IsWalkableGridPosition(testGridPosition))
-                {
-                    continue; // checking if spot is a walkable position. 
-                }
+                    if (unitGridposition == testGridPosition)
+                    {
+                        continue; // same grid position where the unit is already at
+                    }
+                    if (LevelGrid.Instance.HasAnyUnitOnGridPosition(testGridPosition))
+                    {
+                        continue; // Grid Position already occupied with another unit
+                    }
 
-                if (!Pathfinding.Instance.HasPath(unitGridposition, testGridPosition))
-                {
-                    continue; // checking for unreachable areas.
-                }
+                    if (!Pathfinding.Instance.IsWalkableGridPosition(testGridPosition))
+                    {
+                        continue; // checking if spot is a walkable position. 
+                    }
 
-                int pathFindingDistanceMultiplier = 10;
-                // path length costs were multiplied by 10 to work with ints instead of floats so the max distance check
-                // is also multiplied by 10 so it still works as it should. 
-                if (Pathfinding.Instance.GetPathLength(unitGridposition, testGridPosition) > maxMoveDistance * pathFindingDistanceMultiplier)
-                {
-                    continue; // path length is too long. 
-                }
+                    if (!Pathfinding.Instance.HasPath(unitGridposition, testGridPosition))
+                    {
+                        continue; // checking for unreachable areas.
+                    }
 
-                validGridPositionList.Add(testGridPosition);
+                    int pathFindingDistanceMultiplier = 10;
+                    // path length costs were multiplied by 10 to work with ints instead of floats so the max distance check
+                    // is also multiplied by 10 so it still works as it should. 
+                    if (Pathfinding.Instance.GetPathLength(unitGridposition, testGridPosition) > maxMoveDistance * pathFindingDistanceMultiplier)
+                    {
+                        continue; // path length is too long. 
+                    }
+
+                    validGridPositionList.Add(testGridPosition);
+                }
             }
         }
 

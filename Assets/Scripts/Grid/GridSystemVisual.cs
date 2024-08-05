@@ -125,24 +125,30 @@ public class GridSystemVisual : MonoBehaviour
         {
             for (int z = -range; z <= range; z++) // get grid position values in z range
             {
-                GridPosition testGridPosition = gridPosition + new GridPosition(x, z, gridPosition.floor); // pass those into grid position list adding current grid position and all retrieved positions. 
-
-                // if the position is not valid
-                if (!LevelGrid.Instance.IsValidGridPosition(testGridPosition))
+                for (int floor = -range; floor <= range; floor++)
                 {
-                    continue;
-                }
+                    GridPosition testGridPosition = gridPosition + new GridPosition(x, z, gridPosition.floor); // pass those into grid position list adding current grid position and all retrieved positions. 
 
-                // checking to see if in circular range or not
-                int testDistance = (int) MathF.Abs(x) + (int)MathF.Abs(z); // we only care about positive grid position values, values outside grid should be ignored  so Abs
-                if(testDistance > range) // if above the range continue and ignore it
-                {
-                    continue;
+                    // if the position is not valid
+                    if (!LevelGrid.Instance.IsValidGridPosition(testGridPosition))
+                    {
+                        continue;
+                    }
+                    // Checking awlkable state
+                    if (!Pathfinding.Instance.IsWalkableGridPosition(testGridPosition))
+                    {
+                        continue;
+                    }
+                    // checking to see if in circular range or not
+                    int testDistance = (int)MathF.Abs(x) + (int)MathF.Abs(z); // we only care about positive grid position values, values outside grid should be ignored  so Abs
+                    if (testDistance > range) // if above the range continue and ignore it
+                    {
+                        continue;
+                    }
+                    //if not above range add the grid position
+                    gridPositionsList.Add(testGridPosition);
                 }
-                //if not above range add the grid position
-                gridPositionsList.Add(testGridPosition);
             }
-            
         }
         ShowGridPositionList(gridPositionsList, gridVisualType); // After retreiving all these positions return the data and show it to the user
     }

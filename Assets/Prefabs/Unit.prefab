@@ -390,6 +390,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxMoveDistance: 4
+  differentFloorsTeleportTimer: 0
+  differentFloorsTeleportTimerMax: 0.5
 --- !u!114 &2245932804211267147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -416,7 +418,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   obstaclesLayerMask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 320
   maxShootDistance: 7
   newShootingStateTime: 0.1
   newCoolOffStateTime: 0.7

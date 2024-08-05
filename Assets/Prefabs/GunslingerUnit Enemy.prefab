@@ -33,7 +33,7 @@ PrefabInstance:
     - target: {fileID: 4634243751000887722, guid: 4f8194231db9d704099c8703b8431a98,
         type: 3}
       propertyPath: obstaclesLayerMask.m_Bits
-      value: 256
+      value: 320
       objectReference: {fileID: 0}
     - target: {fileID: 6066056639572820050, guid: 4f8194231db9d704099c8703b8431a98,
         type: 3}

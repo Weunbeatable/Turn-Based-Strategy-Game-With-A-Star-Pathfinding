@@ -42,9 +42,11 @@ public class ShootAction : BaseAction
         switch (state)
         {
             case State.Aiming:
-                Vector3 targetPosition = (targetUnit.GetWorldPosition() - unit.GetWorldPosition()).normalized;
+                Vector3 aimDir = (targetUnit.GetWorldPosition() - unit.GetWorldPosition()).normalized;
+                aimDir.y = 0f;
+
                 float rotateSpeed = 10f;
-                transform.forward = Vector3.Slerp(transform.forward, targetPosition, Time.deltaTime * rotateSpeed); // we'll lerp rotation to make it smoother
+                transform.forward = Vector3.Slerp(transform.forward, aimDir, Time.deltaTime * rotateSpeed); // we'll lerp rotation to make it smoother
                 break;
             case State.Shooting:
                 if (canShootBullet)
@@ -116,62 +118,64 @@ public class ShootAction : BaseAction
     {
         List<GridPosition> validGridPositionList = new List<GridPosition>();
 
-        GridPosition unitGridposition = unit.GetGridPosition();
+        //GridPosition unitGridposition = unit.GetGridPosition();
 
         //Loop through grid and check for points on the grid within 4 units of current unit
         for (int x = -maxShootDistance; x <= maxShootDistance; x++)
         {
             for (int z = -maxShootDistance; z <= maxShootDistance; z++)
             {
-                GridPosition offsetGridPostion = new GridPosition(x, z, 0);
-                GridPosition testGridPosition = unitGridposition + offsetGridPostion;
-
-                // If not valid we want to discard that position, if it is we want to keep it.
-                if (!LevelGrid.Instance.IsValidGridPosition(testGridPosition))
+                for (int floor = -maxShootDistance; floor <= maxShootDistance; floor++)
                 {
-                    continue; // skip to the next iteration of the loop if not valid
-                }
+                    GridPosition offsetGridPostion = new GridPosition(x, z, floor);
+                    GridPosition testGridPosition = unitGridPosition + offsetGridPostion;
 
-                int testDistance = (int)(MathF.Abs(x) + MathF.Abs(z)); // our offsets
-                if(testDistance > maxShootDistance)
-                {
-                    continue;
-                }
-            
-                if (!LevelGrid.Instance.HasAnyUnitOnGridPosition(testGridPosition))
-                {
-                    // Grid Position is empty no unit
-                    continue; 
-                }
+                    // If not valid we want to discard that position, if it is we want to keep it.
+                    if (!LevelGrid.Instance.IsValidGridPosition(testGridPosition))
+                    {
+                        continue; // skip to the next iteration of the loop if not valid
+                    }
 
-                Unit targetUnit =  LevelGrid.Instance.GetUnitAtGridPosition(testGridPosition);
+                    int testDistance = (int)(MathF.Abs(x) + MathF.Abs(z)); // our offsets
+                    if (testDistance > maxShootDistance)
+                    {
+                        continue;
+                    }
 
-                if (targetUnit.IsEnemy() == unit.IsEnemy()) 
-                {
-                    // if on same team ignore
-                    continue;
+                    if (!LevelGrid.Instance.HasAnyUnitOnGridPosition(testGridPosition))
+                    {
+                        // Grid Position is empty no unit
+                        continue;
+                    }
+
+                    Unit targetUnit = LevelGrid.Instance.GetUnitAtGridPosition(testGridPosition);
+
+                    if (targetUnit.IsEnemy() == unit.IsEnemy())
+                    {
+                        // if on same team ignore
+                        continue;
+                    }
+
+                    // raycast from unit position to target pos to validate if you can shoot (avoid shooting through walls)
+                    // also leaving it flexible to shoot over crates and low walls. so there should be a height check and it should use 
+                    // vector3.up 
+                    Vector3 unitWorldPosition = LevelGrid.Instance.GetWorldPosition(unitGridPosition); // using unit world position since code was refactored to use unit position.
+                    Vector3 shootDir = (targetUnit.GetWorldPosition() - unitWorldPosition).normalized;
+                    float unitShoulderHeight = 1.7f; // got that value using the units themselves. 
+                    if (Physics.Raycast
+                          (unitWorldPosition + Vector3.up * unitShoulderHeight,
+                          shootDir,
+                          Vector3.Distance(unitWorldPosition, targetUnit.GetWorldPosition()),
+                          obstaclesLayerMask)) // if this raycast does hit something then its not a valid place to shoot. 
+                    {
+                        // blocked by an obstacle
+                        continue;
+                    }
+
+                    validGridPositionList.Add(testGridPosition);
                 }
-
-                // raycast from unit position to target pos to validate if you can shoot (avoid shooting through walls)
-                // also leaving it flexible to shoot over crates and low walls. so there should be a height check and it should use 
-                // vector3.up 
-                Vector3 unitWorldPosition = LevelGrid.Instance.GetWorldPosition(unitGridposition); // using unit world position since code was refactored to use unit position.
-                Vector3 shootDir = targetUnit.GetWorldPosition() - unitWorldPosition.normalized;
-                float unitShoulderHeight = 1.7f; // got that value using the units themselves. 
-              if (Physics.Raycast
-                    (unitWorldPosition + Vector3.up * unitShoulderHeight,
-                    shootDir,
-                    Vector3.Distance(unitWorldPosition, targetUnit.GetWorldPosition()),
-                    obstaclesLayerMask)) // if this raycast does hit something then its not a valid place to shoot. 
-                {
-                    // blocked by an obstacle
-                    continue; 
-                }
-
-                validGridPositionList.Add(testGridPosition);
             }
         }
-
         return validGridPositionList;
     }
 

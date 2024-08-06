@@ -4527,7 +4527,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.38727388, y: -1e-45, z: 0, w: 0.92196476}
+  m_LocalRotation: {x: 0.38727388, y: -1e-45, z: 1e-45, w: 0.92196476}
   m_LocalPosition: {x: 0, y: 10, z: -9.803}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -6064,6 +6064,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 774b602502bb32e42a85c35bb01549bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dynmaicFloorPosition: 0
+  ignoreRenderList: []
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -8906,7 +8908,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1618613938}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.38727388, y: -1e-45, z: 0, w: 0.92196476}
+  m_LocalRotation: {x: 0.38727388, y: -1e-45, z: 1e-45, w: 0.92196476}
   m_LocalPosition: {x: 0, y: 10, z: -9.803}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -11960,6 +11962,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 774b602502bb32e42a85c35bb01549bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dynmaicFloorPosition: 0
+  ignoreRenderList: []
 --- !u!4 &1938869406 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3534587411254332834, guid: 93898b8b46944854b8666c7ac7388df0,
@@ -15830,6 +15834,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 774b602502bb32e42a85c35bb01549bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dynmaicFloorPosition: 0
+  ignoreRenderList: []
 --- !u!1001 &274788819217664752
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18577,7 +18583,7 @@ PrefabInstance:
     - target: {fileID: 1272654838058134573, guid: 1ecc80e8723fd834f888af5ef3afd332,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 19.5
+      value: 34.5
       objectReference: {fileID: 0}
     - target: {fileID: 1272654838058134573, guid: 1ecc80e8723fd834f888af5ef3afd332,
         type: 3}

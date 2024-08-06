@@ -18,4 +18,27 @@ public class MouseWorld : MonoBehaviour
         Physics.Raycast(ray, out RaycastHit raycastHit, float.MaxValue, instance.mousePlaneLayerMAsk); // 1 << 6 way to change mask with bit shifting without using layermask
         return raycastHit.point;
     }
+    public static Vector3 GetPositionOnlyHitVisible()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(InputManager.Instance.GetMouseScreenPosition());
+        // items not gauranteed to be ordered in raycast hit array
+        RaycastHit[] rayCastHitArray = Physics.RaycastAll(ray, float.MaxValue, instance.mousePlaneLayerMAsk); // 1 << 6 way to change mask with bit shifting without using layermask
+        // sorti using built in function that uses Icompare and  a delegate
+        System.Array.Sort(rayCastHitArray, (RaycastHit rayCastHitA, RaycastHit rayCastHitB) =>
+        {
+        return Mathf.RoundToInt(rayCastHitA.distance - rayCastHitB.distance); // returned ints from comparison makes it easier to sort
+        });
+        foreach (RaycastHit raycastHit in rayCastHitArray)
+        {
+           if(raycastHit.transform.TryGetComponent(out Renderer renderer))
+            {
+                if (renderer.enabled)
+                {
+                    return raycastHit.point;
+                }
+                // if disabled like if zoomed in on, we'll just ignore it
+            }
+        }
+        return Vector3.zero;
+    }
 }

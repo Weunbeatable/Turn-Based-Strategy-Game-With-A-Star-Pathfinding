@@ -69,14 +69,18 @@ public class GridSystemVisual : MonoBehaviour
         }
         //instead of the grid visual running every frame we want it running on selection
         UnitActionSystem.Instance.OnSelectedActionChange += UnitActionSystem_OnSelectedActionChange;
-        LevelGrid.Instance.OnAnyUnitMovedGridPosition += LevelGrid_OnAnyUnitMovedGridPosition;
+        UnitActionSystem.Instance.OnBusyChanged += Instance_OnBusyChanged;
+        //LevelGrid.Instance.OnAnyUnitMovedGridPosition += LevelGrid_OnAnyUnitMovedGridPosition;
         Unit.OnAnyUnitDead += Unit_OnAnyUnitDead; // in the event that a unit dies we should update the visual so its not showing us incorrect information on who we can target.
 
         UpdateGridVisual();
     }
-  
 
- 
+    private void Instance_OnBusyChanged(object sender, bool e)
+    {
+        UpdateGridVisual();
+    }
+
     public void HideAllGridPosition()
     {
       

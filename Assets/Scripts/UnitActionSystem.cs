@@ -70,7 +70,7 @@ public class UnitActionSystem : MonoBehaviour
         {
             // verify that you can actually move here using the grid position checks in level grid and grid system
             // If valid then call move action to move
-            GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(MouseWorld.GetPosition());
+            GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(MouseWorld.GetPositionOnlyHitVisible());
 
             if (!selectedAction.IsValidActionGridPosition(mouseGridPosition))
             {

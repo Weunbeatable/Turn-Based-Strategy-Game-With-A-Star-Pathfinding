@@ -3,14 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
-public class CameraCointroller : MonoBehaviour
+public class CameraController : MonoBehaviour
 {
     private const float MIN_FOLLOW_Y_OFFSET = 2f;
-    private const float MAX_FOLLOW_Y_OFFSET = 12f;
+    private const float MAX_FOLLOW_Y_OFFSET = 15f;
+
+    public static CameraController Instance {  get; private set; }
 
     [SerializeField] CinemachineVirtualCamera cinemachineVirtualCamera;
     private CinemachineTransposer cinemachineTransposer;
     private Vector3 targetFollowOffset;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Start()
     {
@@ -69,4 +76,6 @@ public class CameraCointroller : MonoBehaviour
         Vector3 moveVector = transform.forward * inputMoveDir.y + transform.right * inputMoveDir.x;
         transform.position += moveVector * moveSpeed * Time.deltaTime;
     }
+
+    public float GetCameraHeight() => targetFollowOffset.y;
 }

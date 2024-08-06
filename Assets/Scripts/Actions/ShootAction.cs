@@ -160,6 +160,8 @@ public class ShootAction : BaseAction
                     // also leaving it flexible to shoot over crates and low walls. so there should be a height check and it should use 
                     // vector3.up 
                     Vector3 unitWorldPosition = LevelGrid.Instance.GetWorldPosition(unitGridPosition); // using unit world position since code was refactored to use unit position.
+                    //NOTE be careful with BEDMAS not dubstracting target by unit before normalizing was giving incorrect calculations
+                    // now code works as intended. 
                     Vector3 shootDir = (targetUnit.GetWorldPosition() - unitWorldPosition).normalized;
                     float unitShoulderHeight = 1.7f; // got that value using the units themselves. 
                     if (Physics.Raycast

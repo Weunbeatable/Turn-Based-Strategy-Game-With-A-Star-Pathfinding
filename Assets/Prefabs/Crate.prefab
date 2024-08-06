@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 763303775544624456}
   - component: {fileID: 2401730958146672792}
   - component: {fileID: 7647910195237157572}
+  - component: {fileID: 604383263088223227}
   m_Layer: 8
   m_Name: Crate
   m_TagString: Untagged
@@ -69,6 +70,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   crateDestroyedPrefab: {fileID: 763303775544624456, guid: 0a19b0c5a2444b943a62ada1f02108e5,
     type: 3}
+--- !u!114 &604383263088223227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6445981749424523980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 774b602502bb32e42a85c35bb01549bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &6126755119456848845
 PrefabInstance:
   m_ObjectHideFlags: 0

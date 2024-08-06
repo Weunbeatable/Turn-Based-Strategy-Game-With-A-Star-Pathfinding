@@ -20,6 +20,7 @@ GameObject:
   - component: {fileID: 1501323904679853834}
   - component: {fileID: -7013486838919240237}
   - component: {fileID: -5289600098112925424}
+  - component: {fileID: 2488990261540080391}
   m_Layer: 7
   m_Name: MageUnit
   m_TagString: Untagged
@@ -215,6 +216,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: defdb57b6c278a040bfc04ac679b6209, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2488990261540080391
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 274788820199947859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 774b602502bb32e42a85c35bb01549bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dynmaicFloorPosition: 1
+  ignoreRenderList:
+  - {fileID: 4837060178538712214}
 --- !u!1 &293805622682277744
 GameObject:
   m_ObjectHideFlags: 0
